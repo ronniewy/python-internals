@@ -131,3 +131,34 @@ NSMALLNEGINTS 和 NSMALLPOSINTS 通过宏定义：
 #define NSMALLNEGINTS           5
 ```
 因此 -5 在该预定义的小整数范围中，而 -6 则不在，也就解释了本文一开始例子中的现象。
+
+python运行初始化之后的`small_ints`示意如下图：
+![](img.png)
+
+## 修改验证
+
+将cpython3.8源码 Objects/longobject.c 的如下宏定义修改为：
+```c
+#define NSMALLNEGINTS           6
+```
+然后重新编译：
+```shell
+make -j8
+```
+> -j8表示使用8核进行编译以提升编译速度，根据实际硬件进行配置
+> 
+> 如果是第一次执行编译，需先进行配置后再执行该make命令：
+> ```shell
+> CPPFLAGS="-I$(brew --prefix zlib)/include" \
+> LDFLAGS="-L$(brew --prefix zlib)/lib" \
+> ./configure --with-openssl=$(brew --prefix openssl) --with-pydebug
+> ```
+
+重新进入python解释器验证：
+```shell
+>>> a = -6
+>>> b = -6
+>>> print(id(a), id(b))
+4551161392 4551161392
+```
+可见，新的宏定义已经生效，-6 也被加入了python初始化阶段预定义的小整数池`small_ints`数组中。
