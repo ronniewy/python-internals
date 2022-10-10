@@ -6,5 +6,5 @@ cpython是python的官方实现版本，本文基于cpython 3.8源码分析，�
 
 ## 目录
 
-1. [small ints(小整数)](small ints/small_ints.md)
+1. [small ints(小整数)](small_ints/small_ints.md)
 2. 
